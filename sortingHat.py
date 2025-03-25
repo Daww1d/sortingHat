@@ -120,15 +120,16 @@ houses = {"Gryffindor": 0, "Hufflepuff": 0, "Ravenclaw": 0, "Slytherin": 0}
 
 yourHouse = None
 
-#
-style = ttk.Style()
-
 # window
 window = tk.Tk()
 window.geometry("600x400")
 window.title("Sorting Hat")
 window.iconbitmap("hat.ico")
 
+#
+style = ttk.Style()
+window.tk.call("source", "Azure/azure.tcl")
+window.tk.call("set_theme", "dark")
 # Frames
 topFrame = ttk.Frame(window)
 bottomFrame = ttk.Frame(window)
@@ -137,42 +138,62 @@ rightFrame = ttk.Frame(bottomFrame)
 endFrame = ttk.Frame(window)
 
 # Widgets
-label1 = ttk.Label(topFrame, text='im the hat', background="green",font='Calibri 30 bold')
-label2 = ttk.Label(endFrame, text=f'Your house is...{yourHouse}', background="green",font='Calibri 30 bold')
+label1 = ttk.Label(topFrame, text="im the hat", font="Calibri 15 bold")
+label2 = ttk.Label(
+    endFrame, text=f"Your house is...{yourHouse}", font="Calibri 35 bold"
+)
 
-button1 = ttk.Button(leftFrame, text="button1", command=lambda: updateScore(question, 0))
-button2 = ttk.Button(leftFrame, text="button2", command=lambda: updateScore(question, 1))
-button3 = ttk.Button(rightFrame, text="button3", command=lambda: updateScore(question, 2))
-button4 = ttk.Button(rightFrame, text="button4", command=lambda: updateScore(question, 3))
+button1 = ttk.Button(
+    leftFrame, text="button1", command=lambda: updateScore(question, 0)
+)
+button2 = ttk.Button(
+    leftFrame, text="button2", command=lambda: updateScore(question, 1)
+)
+button3 = ttk.Button(
+    rightFrame, text="button3", command=lambda: updateScore(question, 2)
+)
+button4 = ttk.Button(
+    rightFrame, text="button4", command=lambda: updateScore(question, 3)
+)
 
 # pack
 topFrame.pack(fill="both", expand=True)
 bottomFrame.pack(fill="both", expand=True)
 leftFrame.pack(side="left", fill="both", expand=True)
+leftFrame.pack_propagate(False)
 rightFrame.pack(side="right", fill="both", expand=True)
+rightFrame.pack_propagate(False)
 
 label1.pack(fill="both", expand=True)
 
-button1.pack(fill="both", expand=True)
-button2.pack(fill="both", expand=True)
-button3.pack(fill="both", expand=True)
-button4.pack(fill="both", expand=True)
+button1.pack(fill="both", expand=True, padx=4, pady=4)
+button1.pack_propagate(False)
+button2.pack(fill="both", expand=True, padx=4, pady=4)
+button2.pack_propagate(False)
+button3.pack(fill="both", expand=True, padx=4, pady=4)
+button3.pack_propagate(False)
+button4.pack(fill="both", expand=True, padx=4, pady=4)
+button4.pack_propagate(False)
 
-#main
+# main
 question = 0
+
 
 def updateScore(questionNumber, answer):
 
     global question
 
-    houses[answerWeight[questionNumber][answer][0]] += answerWeight[questionNumber][answer][1]
-    houses[answerWeight[questionNumber][answer][2]] += answerWeight[questionNumber][answer][3]
-    if question <7:
+    houses[answerWeight[questionNumber][answer][0]] += answerWeight[questionNumber][
+        answer
+    ][1]
+    houses[answerWeight[questionNumber][answer][2]] += answerWeight[questionNumber][
+        answer
+    ][3]
+    if question < 7:
         question += 1
         askQuestion(question)
     else:
         endScreen()
-
 
 
 def askQuestion(questionNumber):
@@ -182,19 +203,22 @@ def askQuestion(questionNumber):
     button3.config(text=answerBank[questionNumber][2])
     button4.config(text=answerBank[questionNumber][3])
 
+
 def endScreen():
     findHouse()
     topFrame.pack_forget()
     bottomFrame.pack_forget()
-    label2.pack(fill='both',expand=True)
+    label2.pack(fill="both", expand=True)
     endFrame.pack(fill="both", expand=True)
+
 
 def findHouse():
     global yourHouse
     yourHouse = max(houses, key=houses.get)
-    label2.config(text=yourHouse)
+    label2.config(text=f"You belong to {yourHouse}")
+
 
 askQuestion(question)
-    
+
 # run
 window.mainloop()
